@@ -1,0 +1,146 @@
+ <div class="container">
+
+    <h2 style="text-align: center;">Manage Translations</h2>
+    <!-- <p style="text-align: center;">All Members: <strong>49,053</strong> | Pro Licenses: <strong>724</strong></p> -->
+    <!-- <p style="text-align: center;" *ngFor="let prefix of translationsPrefix">{{ prefix }}Import | Export | <strong>Save as Json</strong> | Save as Excel | Export new translations</p> -->
+    <p style="text-align: center;" class="prefix">
+      <span *ngFor="let prefix of translationsPrefix" [ngClass]="{ 'bold-text': prefix.prefix === selected_prefix }" (click)="selectPrefix(prefix.prefix)" >{{ prefix.prefix }} | </span>
+      <button (click)="openModal('addPrefix')" class="add-button">+</button>
+    </p>
+
+    <div class="table-container">
+        <div style="margin-bottom: 10px;">
+          <input 
+              type="text" 
+              [(ngModel)]="search"
+              (input)="onSearch()" 
+              placeholder="Search by key or translation ..." 
+              style="padding: 5px; width: 30%; border: 1px solid #ccc; border-radius: 4px;">
+
+              <!-- <app-more-dropdown style="float: right;"></app-more-dropdown> -->
+
+              <div class="dropdown" style="float: right;">
+                <button class="dropdown-button" (click)="toggleDropdown()">
+                  Options <span [class.rotate]="isOpen">▼</span>
+                </button>
+              
+                <ul class="dropdown-menu" *ngIf="isOpen">
+                  <!-- <li><a href="#">Appearance</a></li>
+                  <li><a href="#">Activity</a></li> -->
+                  <li (click)="openModal('addKey')"><span>Add Translation Key</span></li>
+                  <li (click)="openModal('addLang')"><span>Add Language</span></li>
+                  <li><span>Save as Json</span></li>
+                  <li><span>Import</span></li>
+                  <li (click)="openModal('export')"><span>Export</span></li>
+            
+                </ul>
+            </div>
+              
+
+        </div>
+        <table>
+            <thead>
+                <tr>
+                  <th style="width: 20%;">Key</th>
+                  <th style="width: 20%" *ngFor="let col of columns">{{ col.toUpperCase() }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngIf="translations.length === 0">
+                    <td [attr.colspan]="columns.length + 1" style="text-align: center; font-weight: bold;">
+                      No records found.
+                    </td>
+                </tr>
+                <tr *ngFor="let translation of translations">
+                    <td>{{ translation.key }}</td>
+                    <td *ngFor="let col of columns" (click)="openModal('viewTranslation', translation)">{{ translation[col] ?? '--' }}</td>
+                </tr>
+            </tbody>
+            
+        </table>
+    </div>
+
+    <app-modal [isOpen]="modalState['export']" title="Export Translations" (close)="closeModal('export')">
+      <button class="submit-btn">Export</button>
+    </app-modal>
+
+    <app-modal [isOpen]="modalState['addPrefix']" title="Add New Translation Prefix" (close)="closeModal('addPrefix')">
+      <form (submit)="addPrefix()" class="modal-form">
+        <label for="prefix">Prefix Key:</label>
+        <input 
+          type="text" 
+          id="prefix" 
+          name="prefix"
+          [(ngModel)]="newPrefix"
+          required
+          class="input-field"
+        />
+        
+        <button type="submit" class="submit-btn">Add Prefix</button>
+      </form>
+    </app-modal>
+
+    <app-modal [isOpen]="modalState['addLang']" title="Add New Language" (close)="closeModal('addLang')">
+      <form (submit)="addLang()" class="modal-form">
+        <label for="lang">Language:</label>
+        <input 
+          type="text" 
+          id="lang" 
+          name="lang"
+          [(ngModel)]="newLang"
+          required
+          class="input-field"
+        />
+        
+        <button type="submit" class="submit-btn">Add Language</button>
+      </form>
+    </app-modal>
+
+    <app-modal [isOpen]="modalState['addKey']" title="Add New Translation Key" (close)="closeModal('addKey')">
+      <form (submit)="addKey()" class="modal-form">
+        <label for="key">Translation Key:</label>
+        <input 
+          type="text" 
+          id="key" 
+          name="key"
+          [(ngModel)]="newKey"
+          required
+          class="input-field"
+        />
+        
+        <button type="submit" class="submit-btn">Add Translation Key</button>
+      </form>
+    </app-modal>
+
+    <app-modal [isOpen]="modalState['viewTranslation']" title="Update Translation" (close)="closeModal('viewTranslation')" style="width: 500px;">
+       <form (submit)="addKey()" class="modal-form" >
+        <input 
+          type="text" 
+          id="key" 
+          name="key"
+          value="{{ selectedTranslation?.key }}"
+          class="input-field"
+        />
+
+        <div *ngFor="let col of columns">
+          <label>{{ col.toUpperCase() }}:</label>
+          <input 
+            type="text" 
+            value="{{ selectedTranslation?.[col] ?? '' }}"
+            name="{{ col }}"
+            class="input-field"
+          />
+        </div>
+        
+        <button type="submit" class="submit-btn">Save</button>
+      </form>
+    </app-modal>
+
+
+
+
+
+
+
+
+</div>

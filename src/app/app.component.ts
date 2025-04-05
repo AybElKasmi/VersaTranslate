@@ -1,12 +1,13 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { TranslationComponent } from './components/translation/translation.component';
+// import { MoreDropdownComponent } from './components/more-dropdown/more-dropdown.component'; // Import
+
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  standalone: true,
+  imports: [CommonModule, TranslationComponent],
+  template: `<app-translation></app-translation>`,
 })
-export class AppComponent {
-  title = 'client';
-}
+export class AppComponent {}
