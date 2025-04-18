@@ -80,8 +80,9 @@ export class TranslationComponent {
       this.newKey = this.selected_prefix == 'default' ? '' : this.selected_prefix + '.'; 
     }
     if (modalName === 'viewTranslation') {
-      console.log(translation);
-      this.selectedTranslation = { ...translation }; 
+      // console.log(translation);
+      // this.selectedTranslation = { ...translation }; 
+      this.selectedTranslation = translation;
 
     }
     this.modalState[modalName] = true; 
@@ -89,7 +90,7 @@ export class TranslationComponent {
 
   closeModal(modalName: string): void {
     if (modalName === 'viewTranslation') {
-      this.selectedTranslation = null; 
+      this.selectedTranslation = {}; 
     }
     this.modalState[modalName] = false;
   }
@@ -139,5 +140,38 @@ export class TranslationComponent {
       }
     );
   }
+
+  updateTranslation(event: Event): void {
+    event.preventDefault();
+  
+    const form = event.target as HTMLFormElement;
+    const formData = new FormData(form);
+  
+    const data: { [key: string]: string } = {};
+    formData.forEach((value, key) => {
+      data[key] = value.toString();
+    });
+
+    this.translationService.updateTranslation(data).subscribe(
+      () => {
+        this.loadTranslations();
+        this.selectedTranslation = {};
+        this.modalState['viewTranslation'] = false;
+      },
+      (error) => {
+        console.error('Error updating translation:', error);
+      }
+    );
+  }
+
+  // public function update(Request $request)
+  //   {
+  //       $data = $request->all();
+  //       $id = $data['id'];
+
+  //       $translation = Translation::findOrFail($id);
+  //       $translation->update($data);
+  //       return $this->success('Translation updated successfully');
+  //   }
   
 }

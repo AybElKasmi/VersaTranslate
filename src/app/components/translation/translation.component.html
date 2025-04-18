@@ -51,9 +51,9 @@
                       No records found.
                     </td>
                 </tr>
-                <tr *ngFor="let translation of translations">
+                <tr *ngFor="let translation of translations" (click)="openModal('viewTranslation', translation)">
                     <td>{{ translation.key }}</td>
-                    <td *ngFor="let col of columns" (click)="openModal('viewTranslation', translation)">{{ translation[col] ?? '--' }}</td>
+                    <td *ngFor="let col of columns">{{ translation[col] ?? '--' }}</td>
                 </tr>
             </tbody>
             
@@ -113,7 +113,8 @@
     </app-modal>
 
     <app-modal [isOpen]="modalState['viewTranslation']" title="Update Translation" (close)="closeModal('viewTranslation')" style="width: 500px;">
-       <form (submit)="addKey()" class="modal-form" >
+       <form (submit)="updateTranslation($event)" class="modal-form" >
+        <input type="hidden" name="id" value="{{ selectedTranslation?.id }}">
         <input 
           type="text" 
           id="key" 

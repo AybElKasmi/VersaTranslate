@@ -6,7 +6,9 @@ import { Observable } from 'rxjs';
   providedIn: 'root',  // Ensure it's provided at the root level
 })
 export class TranslationService {
-  private apiUrl = 'https://api.elkasmi.space/api/translation';  // Your Laravel API URL
+  // private apiUrl = 'https://api.elkasmi.space/api/translation';  // Your Laravel API URL
+  private apiUrl = 'http://127.0.0.1:8000/api/translation';  // Your Laravel API URL
+
 
   constructor(private http: HttpClient) {} // Inject HttpClient
 
@@ -32,6 +34,10 @@ export class TranslationService {
   }
 
   addLang(data: any): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/lang`, data);
+    return this.http.post<any>(`${this.apiUrl}/lang`, {'data': data});
+  }
+
+  updateTranslation(data: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/update`, data);
   }
 }
